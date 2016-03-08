@@ -1,8 +1,30 @@
 require "socket"
 
-class MyServer
+module Pages
+  class ServePages
+    def parse_url(request)
+      request_uri  = request.split(" ")[1]
+    end
+
+    def parse_request(request_url)
+      case request_url
+      when "/home"
+        res("You are on home")
+      when "/about"
+        res("You are on about")
+      when "/"
+        res("welcome, root")
+      else
+        res("Not Found", 404)
+      end
+    end
+  end
+end
+
+class MyServer < Pages::ServePages
   def initialize
     port = rand(999) + 3000
+    port ||= 3000
     @server = TCPServer.new "localhost", port
     puts "Connected on port #{port}"
     req
@@ -31,24 +53,6 @@ class MyServer
       @client.print message
       @client.print "\r\n"
       @client.print response
-  end
-
-  def parse_url(request)
-    request_uri  = request.split(" ")[1]
-  end
-
-  def parse_request(request_url)
-    case request_url
-    when "/home"
-      res("You are on home")
-    when "/about"
-      res("You are on about")
-    when "/"
-      res("welcome, root")
-    else
-      res("Not Found", 404)
-    end
-
   end
 end
 
