@@ -30,6 +30,8 @@ class MyServer < Pages::ServePages
     req
   end
 
+  private
+
   def req
     loop do
       @client = @server.accept
