@@ -1,4 +1,4 @@
-class Pages
+module Pages
   def parse_request(method, request_url)
     @root_path = "public/"
     file = "index"

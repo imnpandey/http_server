@@ -1,6 +1,8 @@
 require './pages'
 
-class Processing < Pages
+module Processing
+  include Pages
+
   def process_request
     method, path = @request.gets.split
     puts method
