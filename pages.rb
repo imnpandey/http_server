@@ -1,37 +1,35 @@
-module Pages
-  class ServePages
-    def parse_request(request_url)
-      case request_url
-      when "/home"
-        message = serve_file(request_url)
-        response message
-      when "/about"
-        message = serve_file(request_url)
-        response message
-      when "/comments"
-        message = serve_file(request_url)
-        response message
-      when "/form_submit"
-        message = write_file
-        response message
-      when "/"
-        message = serve_file("/index")
-        response message
-      else
-        response("Not Found", 404)
-      end
+class Pages
+  def parse_request(method, request_url)
+    file = get_file_name(request_url)
+    if method == "POST"
+      write_file
+    elsif method == "GET" && file_exists?(file)
+      message = serve_file(file)
+      response message
+    else
+       response("Not Found", 404)
     end
+  end
 
-    def serve_file(request_url)
-      file_name = request_url.split("/")[1]
-      text = open(@root_path + file_name + ".html")
-      text.read
-    end
+  private
 
-    def write_file
-      referer = @headers["Referer"].split("/")[-1]
-      content = @client.read(@headers["Content-Length"].to_i)
-      IO.write(@root_path + referer + ".txt", content)
-    end
+  def get_file_name(request_url)
+    request_url.split("/")[1]
+  end
+
+  def file_exists?(file_name)
+    File.exist?("#{@root_path}#{file_name}.html")
+  end
+
+  def serve_file(file_name)
+    text = open("#{@root_path}#{file_name}.html")
+    text.read
+  end
+
+  def write_file
+    referer = @headers["Referer"].split("/")[-1]
+    message = @request.read(@headers["Content-Length"].to_i)
+    IO.write("#{@root_path}#{referer}.txt", message)
+    response message
   end
 end
