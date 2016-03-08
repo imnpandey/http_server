@@ -1,6 +1,8 @@
 class Pages
   def parse_request(method, request_url)
-    file = get_file_name(request_url)
+    @root_path = "public/"
+    file = "index"
+    file = get_file_name(request_url) unless request_url == "/"
     if method == "POST"
       write_file
     elsif method == "GET" && file_exists?(file)
@@ -18,6 +20,7 @@ class Pages
   end
 
   def file_exists?(file_name)
+    puts "#{@root_path}#{file_name}.html"
     File.exist?("#{@root_path}#{file_name}.html")
   end
 

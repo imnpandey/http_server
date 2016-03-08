@@ -3,7 +3,6 @@ require './processing'
 
 class MyServer < Processing
   def initialize
-    @root_path = "public/"
     @server = TCPServer.new "localhost", 3000
     puts "Connected on port 3000"
     request
