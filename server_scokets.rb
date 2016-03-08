@@ -1,4 +1,5 @@
 require "socket"
+require 'net/http'
 
 module Pages
   class ServePages
@@ -9,30 +10,41 @@ module Pages
     def parse_request(request_url)
       case request_url
       when "/home"
-        res("You are on home")
+        message = serve_file(request_url)
+        response message
       when "/about"
-        res("You are on about")
+        message = serve_file(request_url)
+        response message
+      when "/comments"
+        message = serve_file(request_url)
+        response message
       when "/"
-        res("welcome, root")
+        message = serve_file("/index")
+        response message
       else
-        res("Not Found", 404)
+        response("Not Found", 404)
       end
+    end
+
+    def serve_file(request_url)
+      file_name = request_url.split("/")[1]
+      text = open(@root_path + file_name + ".html")
+      text.read
     end
   end
 end
 
 class MyServer < Pages::ServePages
   def initialize
-    port = rand(999) + 3000
-    port ||= 3000
-    @server = TCPServer.new "localhost", port
-    puts "Connected on port #{port}"
-    req
+    @root_path = "public/"
+    @server = TCPServer.new "localhost", 3000
+    puts "Connected on port 3000"
+    request
   end
 
   private
 
-  def req
+  def request
     loop do
       @client = @server.accept
       request = @client.gets
@@ -43,18 +55,18 @@ class MyServer < Pages::ServePages
     end
   end
 
-  def res(response, status=200)
-      message = "HTTP/1.1 200 OK\r\n" +
+  def response(body, status=200)
+      header = "HTTP/1.1 200 OK\r\n" +
                 "Content-Type: text/plain\r\n" +
-                "Content-Length: #{response.bytesize}\r\n" +
+                "Content-Length: #{body.bytesize}\r\n" +
                 "Connection: close\r\n"
       unless status == 200
-        message = "HTTP/1.1 404 Not Found\r\n" +
+        header = "HTTP/1.1 404 Not Found\r\n" +
                   "Connection: close\r\n"
       end
-      @client.print message
+      @client.print header
       @client.print "\r\n"
-      @client.print response
+      @client.print body
   end
 end
 
