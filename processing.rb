@@ -4,7 +4,7 @@ module Processing
   include Pages
 
   def process_request
-    method, path = @request.gets.split
+    method, path = @request.gets.split(" ")
     puts method
     @headers = {}
     while line = @request.gets.split(' ', 2)
