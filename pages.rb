@@ -25,16 +25,6 @@ module Pages
 
   private
 
-  def parse_post_data
-    message = @request.read(@headers["Content-Length"].to_i).split("&")
-    hash = {}
-    message.each do |data|
-      value = data.split("=")
-      hash[value[0]] = value[1]
-    end
-    hash
-  end
-
   def get_file_name(request_url)
     request_url.split("/")[1]
   end
