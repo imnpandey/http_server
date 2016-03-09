@@ -2,13 +2,16 @@ require './db_functions'
 
 module Pages
   include DBFunction
+
   def parse_request(method, request_url)
-    puts request_url
     @root_path = "public/"
     file = "index"
+    puts @headers
     file = get_file_name(request_url) unless request_url == "/"
     if method == "POST"
-      store_DB
+      data = parse_post_data
+      puts data
+      store_DB(data)
     elsif method == "GET" && file == "comments"
       id = request_url.split("/")[-1]
       show_data_DB(id)
@@ -21,6 +24,16 @@ module Pages
   end
 
   private
+
+  def parse_post_data
+    message = @request.read(@headers["Content-Length"].to_i).split("&")
+    hash = {}
+    message.each do |data|
+      value = data.split("=")
+      hash[value[0]] = value[1]
+    end
+    hash
+  end
 
   def get_file_name(request_url)
     request_url.split("/")[1]
