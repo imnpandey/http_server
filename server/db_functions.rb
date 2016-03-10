@@ -8,8 +8,9 @@ module DBFunction
     connect_DB
     begin
       DB.execute("INSERT INTO comments (name, email, comments) VALUES ('#{data['name']}', '#{data['email']}', '#{data['comments']}');")
-      response("Data Entered Successfully!")
+      response = "Data Entered Successfully!"
     rescue SQLite3::Exception => e
+      response = "Exception Occured."
       puts "Exception occurred #{e}"
     end
   end

@@ -1,11 +1,5 @@
-require './mapper'
-require './process'
-require './pages'
-
 module Server
-  include Process
-  include Mapper
-  include Pages
+
   def request
     loop do
       @request = @server.accept

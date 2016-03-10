@@ -1,7 +1,4 @@
-require './db_functions'
-
 module Pages
-  include DBFunction
 
   def serve_static(data)
     request_url = data[1]
