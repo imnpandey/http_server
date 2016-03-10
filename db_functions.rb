@@ -3,7 +3,8 @@ require 'sqlite3'
 module DBFunction
   DB = SQLite3::Database.open( "server.db" )
 
-  def store_DB(data)
+  def store_DB(all_data)
+    data = all_data[2]
     connect_DB
     begin
       DB.execute("INSERT INTO comments (name, email, comments) VALUES ('#{data['name']}', '#{data['email']}', '#{data['comments']}');")
@@ -19,9 +20,9 @@ module DBFunction
     rows = DB.execute( "select * from comments #{query}" )
     if rows.length > 0
       data = "<table>#{parse_response_data(rows)}</table>"
-      response(data)
+      response = data
     else
-      response("Not Found", 404)
+      response = "Not Found"
     end
   end
 
@@ -31,8 +32,7 @@ module DBFunction
     begin
       DB.execute( "CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, name TEXT, email TEXT, comments TEXT);" )
     rescue SQLite3::Exception => e
-      puts "Exception occurred"
-      puts e
+      puts "Exception occurred #{e}"
     end
   end
 

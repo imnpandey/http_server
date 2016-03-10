@@ -1,7 +1,4 @@
-require "./mapper"
-
 module Process
-  include Mapper
 
   def parse_request(request)
     data = []

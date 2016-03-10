@@ -1,14 +1,15 @@
 module Mapper
   MAPPING = {
-    "/comments" => "POST"
+    "/form_submit" => "POST",
+    "/comments" => "GET"
   }.freeze
 
   def process_request(data)
     @root_path = "public/"
-    request = data[0]
-    path = data[1]
-    params = data[2]
-    return "static" if MAPPING[path].nil?
-    "dynamic"
+    request, path, params = data[0], data[1], data[2]
+    MAPPING.each do |key, value|
+      return "dynamic" if path.include? key
+    end
+    "static"
   end
 end

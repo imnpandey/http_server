@@ -16,7 +16,13 @@ module Pages
   end
 
   def serve_other(data)
-    "test post"
+    method = data[0]
+    if method == "POST"
+      store_DB(data)
+    elsif method == "GET"
+      id = data[1].split("/")[-1]
+      show_data_DB(id)
+    end
   end
 
   private
