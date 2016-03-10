@@ -9,8 +9,7 @@ module DBFunction
       DB.execute("INSERT INTO comments (name, email, comments) VALUES ('#{data['name']}', '#{data['email']}', '#{data['comments']}');")
       response("Data Entered Successfully!")
     rescue SQLite3::Exception => e
-      puts "Exception occurred"
-      puts e
+      puts "Exception occurred #{e}"
     end
   end
 
