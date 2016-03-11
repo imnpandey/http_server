@@ -5,13 +5,7 @@ module Server
       @request = @server.accept
       puts @request
       data = parse_request(@request) #to processes
-      action = process_request(data) #sends to mapper
-      case action
-      when "static"
-        response serve_static(data)
-      else
-        response serve_other(data)
-     end
+      process_request(data) #sends to mapper
       @request.close
     end
   end

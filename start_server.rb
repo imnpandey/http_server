@@ -2,8 +2,8 @@ require "socket"
 require "./server/server"
 require './server/mapper'
 require './server/process'
-require './server/pages'
-require './server/db_functions'
+require './pages'
+require './db_functions'
 
 class MyServer
   include Server

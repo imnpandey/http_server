@@ -2,6 +2,8 @@
 .DS_Store?
 *.gem
 *.rbc
+*.db
+
 /.config
 /coverage/
 /InstalledFiles
