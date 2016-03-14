@@ -4,8 +4,8 @@ module Server
     loop do
       @request = @server.accept
       puts @request
-      data = parse_request(@request) #to processes
-      response process_request(data) #sends to mapper
+      data = parse_request(@request)
+      response Mapper.new.process_request(data) #sends to mapper
       @request.close
     end
   end
