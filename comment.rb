@@ -1,21 +1,28 @@
 require 'sqlite3'
+require 'uri'
 
-module DBFunction
+class Comment
   DB = SQLite3::Database.open( "server.db" )
 
-  def store_DB(all_data)
-    data = all_data[2]
+  def initialize(data)
+    @data = data
+  end
+
+  def create
+    data = @data[2]
     connect_DB
     begin
       DB.execute("INSERT INTO comments (name, email, comments) VALUES ('#{data['name']}', '#{data['email']}', '#{data['comments']}');")
       response = "Data Entered Successfully!"
     rescue SQLite3::Exception => e
-      response = "Exception Occured."
       puts "Exception occurred #{e}"
+      response = "Exception Occured."
     end
   end
 
-  def show_data_DB(id)
+  def read_comments
+    data = @data
+    id = data[1].split("/")[-1]
     query = ""
     query = "WHERE id = #{id}"if !!(id =~ /\d+/)
     rows = DB.execute( "select * from comments #{query}" )
@@ -48,6 +55,7 @@ module DBFunction
   end
 
   def make_response(row)
-    "<tr><td><a href='/comments/#{row[0]}'>#{row[0]}</a></td><td>#{row[1]}</td> <td>#{row[2]}</td><td>#{row[3]}</td></tr>"
+    id, name, email, comment = row
+    "<tr><td><a href='/comments/#{id}'>#{id}</a></td><td>#{name}</td> <td>#{email}</td><td>#{comment}</td></tr>"
   end
 end
