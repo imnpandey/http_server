@@ -26,27 +26,29 @@ module Server
   private
 
   def parse_request(request)
-    data = []
     method, path = request.gets.split(' ')
-    data << method << path
+    headers = all_header_params(request)
+    params = get_params(path) if method.eql? 'GET'
+    params = post_params(request, headers) if method.eql? 'POST'
+    puts "#{method} #{path} #{params}"
+    Array.new.push(method).push(path).push(params)
+  end
+
+  def all_header_params(request)
     headers = {}
     while line = request.gets.split(' ', 2)
       break if line[0].strip.empty?
       headers[line[0].chop] = line[1].strip
     end
-    params = get_params(path) if method.eql? 'GET'
-    params = post_params(request, headers) if method.eql? 'POST'
-    data << params
-    puts "#{method} #{path} #{params}"
-    data
+    headers
   end
 
   def get_params(path)
     params = []
     if path.include? '?'
       params_string = path.split('?')[1]
-      params_string = paramstring.split(' ')[0]
-      params  = paramstring.split('&')
+      params_string = params_string.split(' ')[0]
+      params  = params_string.split('&')
     end
     generate_params(params)
   end

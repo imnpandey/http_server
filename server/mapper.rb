@@ -7,34 +7,30 @@ class Mapper
   MAPPING.values.each {|file| require_relative "../#{file.split("#")[0]}" }
 
   def process_request(data)
-    request, path, params = data[0], data[1], data[2]
+    request, path, params = data
     puts path
-    action = "dynamic"
-    action = "static" if MAPPING[path].nil?
     method_call = MAPPING[path]
-    if !MAPPING[path.split(/[\/0-9]+$/)[0]].nil?
-      action = "dynamic"
-      method_call = MAPPING[path.split(/[\/0-9]+$/)[0]]
-    end
-    if action == "static"
-      serve_static(data)
-    else
-       serve_dynamic(method_call, data)
-    end
+    action = MAPPING[path].nil? ? "static" : "dynamic"
+    action, method_call = check_for_data(path) if !specific_id(path).nil?
+    action == "static" ? serve_static(data) : serve_dynamic(method_call, data)
   end
 
   private
+
+  def specific_id(path)
+    MAPPING[path.split(/[\/0-9]+$/)[0]]
+  end
+
+  def check_for_data(path)
+    data = Array.new.push("dynamic").push(specific_id(path))
+  end
 
   def serve_static(data)
     request_url = data[1]
     @root_path = "public/"
     file = "index"
     file = get_file_name(request_url) unless request_url == "/"
-    if file_exists?(file)
-      serve_file(file)
-    else
-      "Not Found"
-    end
+    file_exists?(file) ? serve_file(file) : "Not Found"
   end
 
   def serve_dynamic(action, data)

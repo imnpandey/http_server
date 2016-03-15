@@ -12,33 +12,27 @@ class Comment
     data = @data[2]
     connect_DB
     begin
-      DB.execute("INSERT INTO comments (name, email, comments) VALUES ('#{data['name']}', '#{data['email']}', '#{data['comments']}');")
-      response = "Data Entered Successfully!"
+      DB.execute("INSERT INTO comments (name, email, comments)" \
+                 "VALUES ('#{data['name']}', '#{data['email']}'," \
+                 "'#{data['comments']}');")
+      "Data Entered Successfully!"
     rescue SQLite3::Exception => e
       puts "Exception occurred #{e}"
-      response = "Exception Occured."
     end
   end
 
   def read_comments
-    data = @data
-    id = data[1].split("/")[-1]
-    query = ""
-    query = "WHERE id = #{id}"if !!(id =~ /\d+/)
-    rows = DB.execute( "select * from comments #{query}" )
-    if rows.length > 0
-      data = "<table>#{parse_response_data(rows)}</table>"
-      response = data
-    else
-      response = "Not Found"
-    end
+    rows = DB.execute( "select * from comments #{check_query_id}" )
+    rows.length > 0 ? "<table>#{parse_response_data(rows)}</table>"
+                    : "Not Found"
   end
 
   private
 
   def connect_DB
     begin
-      DB.execute( "CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, name TEXT, email TEXT, comments TEXT);" )
+      DB.execute( "CREATE TABLE IF NOT EXISTS comments " \
+        "(id INTEGER PRIMARY KEY, name TEXT, email TEXT, comments TEXT);" )
     rescue SQLite3::Exception => e
       puts "Exception occurred #{e}"
     end
@@ -49,13 +43,17 @@ class Comment
   end
 
   def parse_response_data(rows)
-    rows.map do |row|
-      make_response(row)
-    end.join
+    rows.map{ |row| make_response(row) }.join
   end
 
   def make_response(row)
     id, name, email, comment = row
-    "<tr><td><a href='/comments/#{id}'>#{id}</a></td><td>#{name}</td> <td>#{email}</td><td>#{comment}</td></tr>"
+    "<tr><td><a href='/comments/#{id}'>#{id}</a></td><td>#{name}</td>" \
+    "<td>#{email}</td><td>#{comment}</td></tr>"
+  end
+
+  def check_query_id
+    id = @data[1].split("/")[-1]
+    !!(id =~ /\d+/) ? "WHERE id = #{id}" : ""
   end
 end
