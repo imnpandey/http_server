@@ -19,7 +19,7 @@ RSpec.describe Mapper do
     end
 
     let(:dynamic_not_found) do
-      data = ["GET", "/comments/2", {}]
+      data = ["GET", "/comments/200", {}]
       Mapper.new.process_request(data)
     end
 
