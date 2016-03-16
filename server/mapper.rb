@@ -8,7 +8,7 @@ class Mapper
 
   def process_request(data)
     request, path, params = data
-    puts path
+    puts "#{data}"
     method_call = MAPPING[path]
     action = MAPPING[path].nil? ? "static" : "dynamic"
     action, method_call = check_for_data(path) if !specific_id(path).nil?
