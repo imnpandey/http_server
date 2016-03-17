@@ -14,10 +14,8 @@ module Server
     header = "HTTP/1.1 200 OK\r\n" \
              "Content-Type: text/html\r\n" \
              "Connection: close\r\n"
-    unless body == "Not Found"
-      header = "HTTP/1.1 404 Not Found\r\n" \
-               "Connection: close\r\n"
-    end
+    header = "HTTP/1.1 404 Not Found\r\n" \
+             "Connection: close\r\n" if body == "Not Found"
     @request.print header
     @request.print "\r\n"
     @request.print body

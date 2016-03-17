@@ -60,13 +60,21 @@ RSpec.describe Server do
     end
 
     describe '#post comment' do
-      before(:context) do
-         data = ["POST", "/form_submit", {
-              "name"=>"test",
-              "email"=>"test@nav.com",
-              "comments"=>"test comment spec"
-            }]
-        @comment = Comment.new(data).create
+      let(:last_content) do
+        data = {
+                "name"=>"test", "email"=>"test@nav.com",
+                "comments"=>"test comment spec"
+                }.freeze
+        response = HTTParty.post("http://localhost:3000/form_submit",
+        {
+          :body => data,
+          :headers => { 'Content-Type' => 'text/html', 'Accept' => 'application/text'}
+        })
+        response.body
+      end
+
+      it 'posts content' do
+        expect(last_content).to eq("Data Entered Successfully!")
       end
     end
   end
