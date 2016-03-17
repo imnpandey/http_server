@@ -22,7 +22,7 @@ class Mapper
   end
 
   def check_for_data(path)
-    data = Array.new.push("dynamic").push(specific_id(path))
+    Array.new.push("dynamic").push(specific_id(path))
   end
 
   def serve_static(data)
@@ -36,7 +36,7 @@ class Mapper
   def serve_dynamic(action, data)
     controller_class, method = action.split("#")
     controller_obj = Object.const_get(controller_class.capitalize)
-    response = controller_obj.new(data).send(method)
+    controller_obj.new(data).send(method)
   end
 
   def get_file_name(request_url)

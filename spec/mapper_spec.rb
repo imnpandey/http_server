@@ -2,6 +2,7 @@ require 'rspec'
 require_relative '../server/mapper'
 
 RSpec.describe Mapper do
+
   context "GET" do
     let(:static) do
       data = ["GET", "/home", {}]

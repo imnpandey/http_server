@@ -22,14 +22,14 @@ RSpec.describe Comment do
   end
 
   describe '#read' do
-    it 'returns all the comments' do
+    xit 'returns all the comments' do
       expect(read_all_comments.read_comments).to eq("ok")
     end
 
     it 'returns specific comment' do
-      value = "<table><tr><td><a href='/comments/1'>1</a></td>" \
-              "<td>Navneet Pandey</td><td>npandey057@gmail.com</td>" \
-              "<td>Ola!!</td></tr></table>"
+      value = "<table><tr><td><a href='/comments/1'>1</a>" \
+              "</td><td>test</td><td>test@nav.com</td>" \
+              "<td>test comment</td></tr></table>"
       expect(read_specific_comment.read_comments).to eq(value)
     end
   end
