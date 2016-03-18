@@ -1,7 +1,7 @@
 require 'rspec'
 require 'httparty'
-require_relative '../server/server'
-require_relative '../comment'
+require_relative '../lib/server/server'
+require_relative '../app/comment'
 
 RSpec.describe Server do
   include HTTParty
@@ -18,11 +18,11 @@ RSpec.describe Server do
 
   describe '#static' do
     it "returns root" do
-      expect(root).to eq(open("public/index.html").read)
+      expect(root).to eq(open("app/public/index.html").read)
     end
 
     it "returns static content" do
-      expect(static).to eq(open("public/home.html").read)
+      expect(static).to eq(open("app/public/home.html").read)
     end
   end
 

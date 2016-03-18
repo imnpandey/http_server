@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../server/mapper'
+require_relative '../lib/server/mapper'
 
 RSpec.describe Mapper do
 
@@ -25,7 +25,7 @@ RSpec.describe Mapper do
     end
 
     it "returns static content" do
-      expect(static).to eq(open("public/home.html").read)
+      expect(static).to eq(open("app/public/home.html").read)
     end
 
     it "returns 404 static content" do

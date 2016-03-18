@@ -1,7 +1,7 @@
 require "socket"
 require "optparse"
-require "./server/server"
-require './server/mapper'
+require "./lib/server/server"
+require './lib/server/mapper'
 
 class MyServer
   include Server

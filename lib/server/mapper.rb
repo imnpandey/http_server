@@ -4,7 +4,7 @@ class Mapper
     '/comments' => 'comment#read_comments'
   }.freeze
 
-  MAPPING.values.each {|file| require_relative "../#{file.split("#")[0]}" }
+  MAPPING.values.each {|file| require_relative "../../app/#{file.split("#")[0]}" }
 
   def process_request(data)
     request, path, params = data
@@ -27,7 +27,7 @@ class Mapper
 
   def serve_static(data)
     request_url = data[1]
-    @root_path = "public/"
+    @root_path = "app/public/"
     file = "index"
     file = get_file_name(request_url) unless request_url == "/"
     file_exists?(file) ? serve_file(file) : "Not Found"

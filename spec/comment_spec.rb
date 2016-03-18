@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../comment'
+require_relative '../app/comment'
 
 RSpec.describe Comment do
   let(:read_all_comments) do
