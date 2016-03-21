@@ -1,18 +1,38 @@
-class Mapper
-  MAPPING = {
-    '/form_submit' => 'comment#create',
-    '/comments' => 'comment#read_comments'
-  }.freeze
+require_relative '../../routes'
 
-  MAPPING.values.each {|file| require_relative "../../app/#{file.split("#")[0]}" }
+class Mapper
+  include Routes
+
+  MAPPING.values.each do |file|
+    path = "../../app/#{file.split("#")[0]}"
+    puts "#{path}.rb"
+    puts File.exist?("#{path}.rb")
+    require_relative path if File.exist?("#{path}.rb")
+  end
+
+  CONTENT_TYPE = {
+    'css' => 'text/css',
+    'js' => 'application/javascript',
+    'jpeg' => 'image/jpeg',
+    'jpg' => 'image/jpeg',
+    'png' => 'image/png',
+    'txt' => 'text/plain',
+    'gif' => 'image/gif',
+    'html' => 'text/html',
+    'htm' => 'text/html',
+    'xml' => 'text/xml'
+  }.freeze
 
   def process_request(data)
     request, path, params = data
     puts "#{data}"
+    content = []
     method_call = MAPPING[path]
     action = MAPPING[path].nil? ? "static" : "dynamic"
     action, method_call = check_for_data(path) if !specific_id(path).nil?
-    action == "static" ? serve_static(data) : serve_dynamic(method_call, data)
+    content << (action == "static" ? serve_static(data)
+                                  : serve_dynamic(method_call, data))
+    content << return_file_type(path)
   end
 
   private
@@ -30,7 +50,7 @@ class Mapper
     @root_path = "app/public/"
     file = "index"
     file = get_file_name(request_url) unless request_url == "/"
-    file_exists?(file) ? serve_file(file) : "Not Found"
+    file_exists?(file) ? serve_file(file) : serve_helper(request_url)
   end
 
   def serve_dynamic(action, data)
@@ -44,12 +64,21 @@ class Mapper
   end
 
   def file_exists?(file_name)
-    puts "#{@root_path}#{file_name}.html"
     File.exist?("#{@root_path}#{file_name}.html")
   end
 
   def serve_file(file_name)
     text = open("#{@root_path}#{file_name}.html")
     text.read
+  end
+
+  def serve_helper(file_name)
+    path = "#{@root_path}#{file_name[1..-1]}"
+    File.exist?(path) ? open(path).read : "Not Found"
+  end
+
+  def file_type(file_name)
+    file_type = file_name.split(".")[-1]
+    CONTENT_TYPE[file_type]
   end
 end

@@ -10,11 +10,13 @@ module Server
     end
   end
 
-  def response(body)
+  def response(content)
+    body, content_type = content
     header = "HTTP/1.1 200 OK\r\n" \
-             "Content-Type: text/html\r\n" \
+             "Content-Type: #{content_type}\r\n" \
              "Connection: close\r\n"
     header = "HTTP/1.1 404 Not Found\r\n" \
+             "Content-Type: text/plain\r\n" \
              "Connection: close\r\n" if body == "Not Found"
     @request.print header
     @request.print "\r\n"
